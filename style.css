@@ -1,6 +1,6 @@
 body {
   margin: 50px 0 0 0;
-  background: #ccc;
+  background: #ddd;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -17,6 +17,18 @@ input {
     width: 90%;
     margin: 5%;
   }
+}
+
+.notify {
+  color: #a00;
+  background: #999;
+  display: block;
+  max-width: 300px;
+  padding: 5px;
+  border-radius: 5px;
+  margin: auto;
+  font-family: helvetica;
+  text-align: center;
 }
 
 /* HEADER */
@@ -42,7 +54,7 @@ header .nav-right {
 }
 
 header .nav-info {
-  color: #ccc;
+  color: #ddd;
 }
 
 header a {
@@ -194,16 +206,4 @@ table, th, td {
   display: block;
   margin: 0;
   float: right;
-}
-
-/* RENAME FORM */
-
-.rename {
-  display: none;
-}
-
-/* COMMENT EDIT AREA */
-
-#comment-area {
-  display: none;
 }

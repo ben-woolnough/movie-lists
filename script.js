@@ -24,13 +24,11 @@ function showResponse(response) {
         var title = response.Title;
         var year = response.Year.slice(0, 4); // slice for range of years
         var type = response.Type;
-
         // fill in form
         var form = document.getElementById("hidden-form");
         form.elements[0].value = title;
         form.elements[1].value = year;
         form.elements[2].value = type;
-
         // display 'box' div
         var box = document.getElementById("box");
         box.querySelector("h3").innerHTML = 
@@ -54,13 +52,10 @@ function editComment(obj) {
     // display comment area
     var commentArea = document.getElementById("comment-area");
     commentArea.style.display = "block";
-
     // copy comment to textarea
-    console.log(obj.value);
     var comment = obj.parentElement.querySelector("p").innerHTML;
     var textArea = commentArea.querySelector("textarea");
     textArea.innerHTML = comment;
-
     // set button value to entry_id
     var saveButton = commentArea.querySelector("button");
     saveButton.value = obj.value;

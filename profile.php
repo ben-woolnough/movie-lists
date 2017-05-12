@@ -19,15 +19,19 @@ if($_SESSION['logged_in'] == true) {
 
     $user_id = $_SESSION['user_id'];
 
-    //print_r($_SESSION);
-
     // adds list to db
-    if(isset($_POST['list_name'])) {
-        $list_name = $_POST['list_name'];
-        $create_list_query = "INSERT INTO list (list_name, user_id)
-        VALUES ('$list_name', $user_id)";
-        //TODO: variable not needed (others?)
-        $create_list_response = @mysqli_query($dbc, $create_list_query);
+    if (isset($_POST['list_name'])) {
+
+        if (strlen($_POST['list_name'])<1 OR preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $_POST['list_name'])) {
+
+            echo '<h3 class="notify">Enter a valid name.</h3>';
+
+        } else {
+            $list_name = mysqli_real_escape_string($dbc, $_POST['list_name']);
+            $create_list_query = "INSERT INTO list (list_name, user_id)
+            VALUES ('$list_name', $user_id)";
+            @mysqli_query($dbc, $create_list_query);
+        }
     }
 
     echo '<h3>Create a new list</h3>
@@ -45,7 +49,7 @@ if($_SESSION['logged_in'] == true) {
       <tr>
         <th>Name</th>
       </tr>';
-    while($row = mysqli_fetch_array($list_response)) {
+    while ($row = mysqli_fetch_array($list_response)) {
         echo '<tr>
         <td><a href="listview.php?list_id=' . $row['list_id'] . '">' . 
         $row['list_name'] . '</a></td>

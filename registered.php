@@ -9,9 +9,9 @@
 
 <?php
 
-if(isset($_POST['submit'])) {
+if (isset($_POST['submit'])) {
 
-    if(empty($_POST["username"]) OR empty($_POST["password"])) {
+    if (empty($_POST["username"]) OR empty($_POST["password"])) {
 
         header("location: index.php?missing_data");
 
@@ -19,16 +19,25 @@ if(isset($_POST['submit'])) {
 
         require_once('../../mysqli_connect.php');
 
-        $username = trim($_POST['username']);
-        $password = trim($_POST['password']);
+        $username = $_POST['username'];
+        $password = $_POST['password'];
 
-        $query = "INSERT INTO user (username, password) VALUES ('$username', '$password')";
-        @mysqli_query($dbc, $query);
+        // check that username does not contain special chars
+        if (preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $username) OR strlen($username)>30 OR strlen($password)>30) {
 
-        if(mysqli_affected_rows($dbc) == 1) {
-            header("location: index.php?registered=true");
+            header("location: index.php?invalid");
+
         } else {
-            header("location: index.php?registered=false");
+
+            $query = "INSERT INTO user (username, password) VALUES ('$username', '$password')";
+            mysqli_query($dbc, $query);
+
+            if (mysqli_affected_rows($dbc) == 1) {
+                header("location: index.php?registered=true");
+            } else {
+                header("location: index.php?registered=false");
+            }
+            
         }
 
         mysqli_close($dbc);

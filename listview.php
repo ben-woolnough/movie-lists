@@ -11,18 +11,22 @@
 
 <?php
 
-if($_SESSION['logged_in'] == true) {
+if ($_SESSION['logged_in'] == true) {
 
     include 'header.php';
 
     require_once('../../mysqli_connect.php');
     
-    if(isset($_GET['list_id'])) { // if list_id not set, redirect
+    // validate list_id
+    if (isset($_GET['list_id'])) { // check list_id set
         $list_id = $_GET['list_id'];
+        if (!is_numeric($list_id)) { // if list_id not a number, redirect
+            header("location: profile.php");
+        }
     } else {
         header("location: profile.php");
     }
-
+        
     // gets list name
     $name_query = "SELECT * FROM list WHERE list_id=$list_id";
     $name_response = @mysqli_query($dbc, $name_query);
@@ -30,7 +34,7 @@ if($_SESSION['logged_in'] == true) {
     $list_name = $list_array['list_name'];
 
     // checks if list belongs to user
-    if($_SESSION['user_id'] == $list_array['user_id']) {
+    if ($_SESSION['user_id'] == $list_array['user_id']) {
 
         echo '<h1> List: ' . $list_name . '</h1>';
         echo '<h3><a href="editlist.php?list_id=' . $list_id . '">Edit</a></h3>';
@@ -52,7 +56,7 @@ if($_SESSION['logged_in'] == true) {
         <th>Comment</th>
         </tr>';
 
-        while($row = mysqli_fetch_array($response)) {
+        while ($row = mysqli_fetch_array($response)) {
             echo '<tr>
             <td>' . $row['title'] . '</td>
             <td>' . $row['year'] . '</td>
@@ -62,7 +66,7 @@ if($_SESSION['logged_in'] == true) {
         }
         echo '</table>';
 
-    mysqli_close($dbc);
+        mysqli_close($dbc);
 
     } else { // id not in database or owned by other user
         echo '<h1>Not found.</h1>';

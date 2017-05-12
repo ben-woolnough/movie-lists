@@ -11,14 +11,18 @@
 
 <?php
 
-if($_SESSION['logged_in'] == true) {
+if ($_SESSION['logged_in'] == true) {
 
     include 'header.php';
 
     require_once('../../mysqli_connect.php');
 
-    if(isset($_GET['list_id'])) { // if list_id not set, redirect
+    // validate list_id
+    if (isset($_GET['list_id'])) { // check list_id set
         $list_id = $_GET['list_id'];
+        if (!is_numeric($list_id)) { // if list_id not a number, redirect
+            header("location: profile.php");
+        }
     } else {
         header("location: profile.php");
     }
@@ -30,38 +34,48 @@ if($_SESSION['logged_in'] == true) {
     $list_name = $list_array['list_name'];
 
     // checks if list belongs to user
-    if($_SESSION['user_id'] == $list_array['user_id']) {
+    if ($_SESSION['user_id'] == $list_array['user_id']) {
 
-        // updates list name
-        if(isset($_POST['newname'])) {
-            $rename_query = "UPDATE list SET list_name='" . $_POST['newname'] . "' WHERE list_id=$list_id";
-            @mysqli_query($dbc, $rename_query);
-            $list_name = $_POST['newname'];
+        // rename list and update list_name variable
+        if (isset($_POST['newname'])) {
+
+            if (strlen($_POST['newname'])<1 OR preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $_POST['newname'])) {
+
+                echo '<h3 class="notify">Enter a valid name.</h3>';
+
+            } else {
+                $newname = mysqli_real_escape_string($dbc, $_POST['newname']);
+                $rename_query = "UPDATE list SET list_name='$newname' WHERE list_id=$list_id";
+                @mysqli_query($dbc, $rename_query);
+                $list_name = $newname;
+            }
         }
 
         // deletes entry from list
-        if(isset($_POST['id_to_delete'])) {
+        if (isset($_POST['id_to_delete'])) {
+            $id_to_delete = mysqli_real_escape_string($dbc, $_POST['id_to_delete']);
             $delete_entry = "DELETE FROM entry_in_list
-            WHERE (list_id=$list_id AND movie_id=" . $_POST['id_to_delete'] . ")";
+            WHERE (list_id=$list_id AND movie_id=$id_to_delete)";
             @mysqli_query($dbc, $delete_entry);
         }
 
         // edit comment form
-        if(isset($_POST['new_comment'])) {
+        if (isset($_POST['new_comment'])) {
             // update if comment exists; insert if not
 
-            $new_comment = htmlspecialchars($_POST['new_comment']);
+            $new_comment = htmlspecialchars(mysqli_real_escape_string($dbc, $_POST['new_comment']));
+            $comment_entry_id = mysqli_real_escape_string($dbc, $_POST['entry_id']);
 
-            $query = "SELECT * FROM comment WHERE entry_id=" . $_POST['entry_id'];
+            $query = "SELECT * FROM comment WHERE entry_id=$comment_entry_id";
             $response = @mysqli_query($dbc, $query);
-
             $comment_array = mysqli_fetch_array($response);
-            if($comment_array) {
-                $update_query = "UPDATE comment SET comment='" . $new_comment . "' WHERE entry_id=" . $_POST['entry_id'];
-                @mysqli_query($dbc, $comment_query);
+
+            if ($comment_array) {
+                $update_query = "UPDATE comment SET comment='$new_comment' WHERE entry_id=$comment_entry_id";
+                @mysqli_query($dbc, $update_query);
             } else {
                 $insert_query = "INSERT INTO comment (comment, entry_id)
-                VALUES ('$new_comment'," . $_POST['entry_id'] . ")";
+                VALUES ('$new_comment', $comment_entry_id)";
                 @mysqli_query($dbc, $insert_query);
             }
         }
@@ -71,7 +85,7 @@ if($_SESSION['logged_in'] == true) {
         echo '<h3><a href="listview.php?list_id=' . $list_id . '">Done editing</a></h3>';
 
         // delete list form
-        echo '<form action="deletelist.php" method="post">
+        echo '<form style="display:inline" action="deletelist.php" method="post">
         <button class=button type="submit" name="list_id" value="' . $list_id . '" style="background: #d22">Delete list</button>
         </form>';
 
@@ -109,22 +123,19 @@ if($_SESSION['logged_in'] == true) {
           </div> <!-- box-right -->
         </div>';
 
-        if(isset($_POST['submit']) AND isset($_POST['title'])) {
+        if (isset($_POST['submit']) AND isset($_POST['title'])) {
 
-            $title = $_POST['title'];
-            $year = $_POST['year'];
-            $type = $_POST['type'];
-            $comment = htmlspecialchars($_POST['comment']);
-
-            //print_r($_POST);
+            $title = mysqli_real_escape_string($dbc, $_POST['title']);
+            $year = mysqli_real_escape_string($dbc, $_POST['year']);
+            $type = mysqli_real_escape_string($dbc, $_POST['type']);
+            $comment = htmlspecialchars(mysqli_real_escape_string($dbc, $_POST['comment']));
 
             // checks movie table to see if record exists
             $check_query = "SELECT * FROM movie WHERE (title='$title' AND year='$year')";
             $check_response = @mysqli_query($dbc, $check_query);
-            
 
             // stores movie_id and adds movie to table if not there
-            if(mysqli_num_rows($check_response) > 0) { // row exists
+            if (mysqli_num_rows($check_response) > 0) { // row exists
                 $movie_id = mysqli_fetch_array($check_response)['movie_id'];
             } else { // movie not in table
                 @mysqli_query($dbc, "INSERT INTO movie (title, year, type)
@@ -135,25 +146,26 @@ if($_SESSION['logged_in'] == true) {
             // adds entry to list if not there
             $exists_query = "SELECT * FROM entry_in_list WHERE (entry_in_list.list_id = $list_id AND entry_in_list.movie_id = $movie_id)";
             $exists_response = @mysqli_query($dbc, $exists_query);
-            if(mysqli_num_rows($exists_response) > 0) { // row exists
-                echo '<br><br>Movie in list.<br><br>';
-            } else { // doesn't exist
+
+            if (mysqli_num_rows($exists_response) > 0) { // row exists
+                echo '<h3>Entry already in list.</h3>';
+            } else {
                 $entry_query = "INSERT INTO entry_in_list (list_id, movie_id)
                 VALUES ($list_id, $movie_id)";
                 @mysqli_query($dbc, $entry_query);
                 $entry_id = mysqli_insert_id($dbc); // gets last inserted ID
-                //echo "<h1>Entry ID: $entry_id</h1>";
-                echo 'Entry added to list.<br><br>';
+                echo '<h3>Entry added to list.</h3>';
 
                 // adds comment to table
-                if(!$comment == "") {
+                if (!$comment == "") {
                     @mysqli_query($dbc, "INSERT INTO comment (comment, entry_id)
                         VALUES ('$comment', $entry_id)");
                 }
             }
         }
 
-        // creates table
+        /* TABLE */
+
         // joins entries and movies to get titles
         $query = "SELECT entry_in_list.entry_id, movie.movie_id, movie.title, movie.year, movie.type, comment.comment, comment.comment_id
         FROM entry_in_list
@@ -172,7 +184,7 @@ if($_SESSION['logged_in'] == true) {
         <th>Delete</th>
         </tr>';
 
-        while($row = mysqli_fetch_array($response)) {
+        while ($row = mysqli_fetch_array($response)) {
             echo '<tr>
             <td>' . $row['title'] . '</td>
             <td>' . $row['year'] . '</td>
@@ -188,18 +200,18 @@ if($_SESSION['logged_in'] == true) {
         echo '</table>';
 
         // comment form
-        echo '<div id="comment-area">
+        echo '<div id="comment-area" style="display:none">
         <form action="editlist.php?list_id=' . $list_id . '" method="post">
         <textarea name="new_comment" rows="30" cols="60"></textarea>
         <button class="button" type="submit" name="entry_id">Save</button>
         </form>
         </div>';
 
-    mysqli_close($dbc);
-
     } else { // id not in database or owned by other user
         echo '<h1>Not found.</h1>';
     }
+
+    mysqli_close($dbc);
 
 } else {
     header("location: index.php");

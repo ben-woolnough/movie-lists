@@ -11,33 +11,33 @@
 
 <?php
 // if user is logged in, redirects to profile.php
-if(isset($_SESSION['logged_in'])) {
-    if($_SESSION['logged_in'] == true) {
+if (isset($_SESSION['logged_in'])) {
+    if ($_SESSION['logged_in'] == true) {
         header("location: profile.php");
     }
 }
 // Account registration message
-if(isset($_GET['registered'])) {
-    if($_GET['registered'] == 'true') {
+if (isset($_GET['registered'])) {
+    if ($_GET['registered'] == 'true') {
         echo '<h2>Account created!</h2>';
-    } elseif($_GET['registered'] == 'false') {
+    } elseif ($_GET['registered'] == 'false') {
       echo '<h2>Account not created.</h2>';
     }
 }
+// Invalid username or password
+if (isset($_GET['invalid'])) {
+    echo '<h2>Invalid username or password.</h2>';
+}
 // Wrong password
-if(isset($_GET['wrong_password'])) {
+if (isset($_GET['wrong_password'])) {
     echo '<h2>Wrong password.</h2>';
 }
-// Wrong username
-if(isset($_GET['wrong_username'])) {
-    echo '<h2>User does not exist.</h2>';
-}
-// Wrong username
-if(isset($_GET['missing_data'])) {
+// Missing data
+if (isset($_GET['missing_data'])) {
     echo '<h2>Enter all fields.</h2>';
 }
 // Logout message
-if(isset($_GET['logout'])) {
+if (isset($_GET['logout'])) {
     echo '<h2>Logged out.</h2>';
 }
 
