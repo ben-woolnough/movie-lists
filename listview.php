@@ -3,8 +3,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>List</title>
-  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 
 <body>
@@ -38,6 +39,7 @@ if ($_SESSION['logged_in'] == true) {
 
         echo '<h1> List: ' . $list_name . '</h1>';
         echo '<h3><a href="editlist.php?list_id=' . $list_id . '">Edit</a></h3>';
+        echo '<h3><a href="add.php?list_id=' . $list_id . '">Add movies</a></h3>';
 
         // creates table
         $query = "SELECT movie.title, movie.year, movie.type, comment.comment

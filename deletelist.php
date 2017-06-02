@@ -4,7 +4,7 @@
 <html>
 <head>
   <title>Test</title>
-  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 
 <body>
@@ -29,11 +29,11 @@ if($_SESSION['logged_in']==true AND $_SERVER['REQUEST_METHOD']=='POST') {
         $delete_query = "DELETE FROM list WHERE list_id=$list_id";
         mysqli_query($dbc, $delete_query);
 
-        echo '<h1>List deleted.</h1>';
+        echo '<h2 class="notify">List deleted.</h2>';
         echo '<h3><a href="profile.php">Back</a></h3>';
 
     } else {
-        echo '<h1>Permission denied.</h1>';
+        echo '<h2 class="notify">Permission denied.</h2>';
     }
 
     mysqli_close($dbc);

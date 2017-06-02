@@ -3,8 +3,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Edit</title>
-  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 
 <body>
@@ -85,84 +86,21 @@ if ($_SESSION['logged_in'] == true) {
         echo '<h3><a href="listview.php?list_id=' . $list_id . '">Done editing</a></h3>';
 
         // delete list form
-        echo '<form style="display:inline" action="deletelist.php" method="post">
+        echo '<div>
+        <span><form style="display:inline" action="deletelist.php" method="post">
         <button class=button type="submit" name="list_id" value="' . $list_id . '" style="background: #d22">Delete list</button>
-        </form>';
+        </form></span>';
 
         // rename form
-        echo '<button onclick="renameList()" class="button">Rename list</button>
+        echo '<span><button onclick="renameList()" class="button">Rename list</button></span>
+        
         
         <form action="editlist.php?list_id=' . $list_id . '" method="post" style="display:inline">
         <input class="rename" style="display:none" type="text" name="newname" placeholder="Enter a name">
         <button class="button rename" style="display:none" type="submit" name="list_id" value="submit">OK</button>
-        </form>';
-
-        // HTML searchbar
-        echo '<div>
-          <input id="search-input" class="input" type="text" name="search" placeholder="Add movies or TV series">
-          <button class="button" onclick="getSearch()">Search</button>
+        </form>
         </div>';
 
-        // HTML box
-        echo '<div id=box>
-          <div id=box-left>
-          <h3>title year type</h3>
-          <img src="" alt="Poster" height="226" width="150">
-
-          <form id="hidden-form" action="editlist.php?list_id=' . $list_id . '" method="post">
-            <p>Title: <input type="text" name="title" size="50" value=""></p>
-            <p>Year: <input type="text" name="year" size="4" value=""></p>
-            <p>Type (movie/series): <input type="text" name="type" size="6" value=""></p>
-          </div> <!-- box-left -->
-
-          <div id="box-right">
-            <h4>Comments:</h4>
-            <textarea type="text" name="comment" rows="13" cols="35" placeholder="(Optional) Enter a comment..."></textarea>
-            <div><input id="add-button" class="button" type="submit" name="submit" value="Add"></div>
-          </form>
-          </div> <!-- box-right -->
-        </div>';
-
-        if (isset($_POST['submit']) AND isset($_POST['title'])) {
-
-            $title = mysqli_real_escape_string($dbc, $_POST['title']);
-            $year = mysqli_real_escape_string($dbc, $_POST['year']);
-            $type = mysqli_real_escape_string($dbc, $_POST['type']);
-            $comment = htmlspecialchars(mysqli_real_escape_string($dbc, $_POST['comment']));
-
-            // checks movie table to see if record exists
-            $check_query = "SELECT * FROM movie WHERE (title='$title' AND year='$year')";
-            $check_response = @mysqli_query($dbc, $check_query);
-
-            // stores movie_id and adds movie to table if not there
-            if (mysqli_num_rows($check_response) > 0) { // row exists
-                $movie_id = mysqli_fetch_array($check_response)['movie_id'];
-            } else { // movie not in table
-                @mysqli_query($dbc, "INSERT INTO movie (title, year, type)
-                VALUES ('$title', '$year', '$type')");
-                $movie_id = mysqli_insert_id($dbc); // gets last inserted ID
-            }
-
-            // adds entry to list if not there
-            $exists_query = "SELECT * FROM entry_in_list WHERE (entry_in_list.list_id = $list_id AND entry_in_list.movie_id = $movie_id)";
-            $exists_response = @mysqli_query($dbc, $exists_query);
-
-            if (mysqli_num_rows($exists_response) > 0) { // row exists
-                echo '<h3>Entry already in list.</h3>';
-            } else {
-                $entry_query = "INSERT INTO entry_in_list (list_id, movie_id)
-                VALUES ($list_id, $movie_id)";
-                @mysqli_query($dbc, $entry_query);
-                $entry_id = mysqli_insert_id($dbc); // gets last inserted ID
-                echo '<h3>Entry added to list.</h3>';
-
-                // adds comment to table
-                if (!$comment == "") {
-                    @mysqli_query($dbc, "INSERT INTO comment (comment, entry_id)
-                        VALUES ('$comment', $entry_id)");
-                }
-            }
-        }
 
         /* TABLE */
 
@@ -219,7 +157,7 @@ if ($_SESSION['logged_in'] == true) {
 
 ?>
 
-<script src="script.js"></script>
+<script src="js/script.js"></script>
 
 </body>
 </html>

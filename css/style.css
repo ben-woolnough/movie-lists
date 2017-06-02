@@ -1,0 +1,212 @@
+body {
+  margin: 50px 0 0 0;
+  background: #ddd;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+input {
+  margin-left: 20px;
+}
+
+.notify {
+  color: #c00;
+  background: #fff;
+  display: block;
+  max-width: 300px;
+  padding: 5px;
+  border: 1px solid #c00;
+  border-radius: 5px;
+  margin: auto;
+  font-family: helvetica;
+  text-align: center;
+}
+
+/* HEADER */
+
+header {
+  background: #46d;
+  color: white;
+  padding: 5px 0;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1;
+
+}
+
+header span {
+  font-size: 18pt;
+  margin: 0 10px;
+}
+
+header .nav-right {
+  float: right;
+}
+
+header .nav-info {
+  color: #ddd;
+}
+
+@media screen and (max-width: 350px) {
+  header .nav-info {
+    display: none;
+  }
+}
+
+header a {
+  text-decoration: none;
+}
+
+header a:visited {
+  color: white;
+}
+
+header a:hover {
+  color: #cfc;
+}
+
+/* TABLE */
+
+@media screen and (max-width: 900px) { /*small*/
+  table {
+    width: 90%;
+    margin: auto;
+  }
+}
+
+@media screen and (min-width: 900px) { /*large*/
+  table {
+    width: 800px;
+  }
+  table td, th {
+    font-size: 16pt;
+    padding: 3px 10px;
+  }
+}
+
+table {
+  margin: 20px;
+  background: white;
+}
+
+table td, td p {
+  max-width: 600px;
+  overflow-x: auto;
+}
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+/* LOGIN / REGISTER PAGE */
+
+.login-container {
+  font-family: helvetica;
+  padding: 30px;
+  text-align: center;
+}
+
+.login-container .input-field {
+  padding: 5px;
+  width: 60%;
+}
+
+#login, #register {
+  margin: auto;
+  padding: 10px;
+  border-radius: 30px;
+  max-width: 800px;
+  margin-bottom: 30px;
+  background: #ccc;
+}
+
+
+/* SEARCH BOX */
+
+#box {
+  margin: 20px;
+  background: #eec;
+  border: solid #888 2px;
+  width: 500px;
+  padding: 10px;
+  display: none;
+}
+
+#box-left {
+  float: left;
+  width: 200px;
+  height: 300px;
+}
+
+#box-right {
+  margin-left: 200px;
+  height: 300px;
+}
+
+#add-button {
+  position: relative;
+  left: 60px;
+  width: 60px;
+}
+
+#box img {
+  margin: 0 10px;
+}
+
+#hidden-form p {
+  display: none;
+}
+
+.input {
+  width: 40%;
+  padding: 6px;
+  margin-right: 10px;
+}
+
+/* TEXT WRAPPING */
+
+.prewrap {
+  white-space: pre-wrap;
+}
+
+/* BUTTON CLASSES */
+
+.button, .delete-button, .edit-button {
+  height: 30px;
+  background: #74ba5b;
+  background-image: -webkit-linear-gradient(#15a57f, #15a55d);
+  background-image: linear-gradient(#15a57f, #15a55d);
+  margin: 20px;
+  color: white;
+  border-radius: 7px;
+  border: none;
+  cursor: pointer;
+}
+
+.button:hover, .edit-button:hover {
+  background: #74ba5b;
+}
+
+.delete-button {
+  background: #bbb;
+  width: 30px;
+  font-weight: bold;
+  display: block;
+  margin: auto;
+}
+
+.delete-button:hover {
+  background: #d22;
+}
+
+.edit-button {
+  background: #bbb;
+  display: block;
+  margin: 0;
+  float: right;
+}
