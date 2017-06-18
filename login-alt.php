@@ -1,16 +1,6 @@
-<?php session_start(); ?>
-
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-  <link rel="stylesheet" type="text/css" href="css/style.css">
-</head>
-
-<body>
-
-
 <?php
+
+session_start();
 
 require_once('../../mysqli_connect.php');
 
@@ -54,7 +44,3 @@ if (isset($_POST['submit'])) { // check form was submitted
 mysqli_close($dbc);
 
 ?>
-
-
-</body>
-</html>

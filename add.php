@@ -5,7 +5,7 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Add movies</title>
-  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <?php require 'templates/imports.html'; ?>
 </head>
 
 <body>
@@ -16,7 +16,9 @@ if(!$_SESSION['logged_in'] == true) {
     header("location: index.php");
 }
 
-include 'header.php';
+include 'templates/header.php';
+
+echo '<div id="content">';
 
 require_once('../../mysqli_connect.php');
 
@@ -40,10 +42,10 @@ $list_name = $list_array['list_name'];
 if ($_SESSION['user_id'] == $list_array['user_id']) {
 
     echo '<h1> List: ' . $list_name . '</h1>';
-    echo '<h3><a href="editlist.php?list_id=' . $list_id . '">Edit</a></h3>';
+    echo '<a href="editlist.php?list_id=' . $list_id . '"><button class="button">Edit</button></a>';
 
     echo '<form action="" method="post">
-    <input type="text" name="search_query">
+    <input type="text" name="search_query" placeholder="Search movies">
     <input class="button" type="submit" value="Search">
     </form>';
 
@@ -83,37 +85,36 @@ if ($_SESSION['user_id'] == $list_array['user_id']) {
             $title = $movie['title'];
             $type = 'movie';
             $year = substr($movie['release_date'], 0, 4);
-            $poster_path = $movie['poster_path'];
+            $tmdb_id = $movie['id'];
+            //$poster_path = $movie['poster_path'];
 
             // checks movie table to see if record exists
-            $check_query = "SELECT * FROM movie WHERE (title='$title' AND year='$year')";
+            $check_query = "SELECT * FROM movie WHERE (tmdb_id=$tmdb_id)";
             $check_response = @mysqli_query($dbc, $check_query);
 
             // stores movie_id and adds movie to table if not there
             if (mysqli_num_rows($check_response) > 0) { // row exists
                 $movie_id = mysqli_fetch_array($check_response)['movie_id'];
             } else { // movie not in table
-                @mysqli_query($dbc, "INSERT INTO movie (title, year, type)
-                VALUES ('$title', '$year', '$type')");
+                @mysqli_query($dbc, "INSERT INTO movie (tmdb_id, title, year, type)
+                VALUES ('$tmdb_id', '$title', '$year', '$type')");
                 $movie_id = mysqli_insert_id($dbc); // gets last inserted ID
             }
 
             // adds entry to list if not there
-            $exists_query = "SELECT * FROM entry_in_list WHERE (entry_in_list.list_id = $list_id AND entry_in_list.movie_id = $movie_id)";
-            $exists_response = @mysqli_query($dbc, $exists_query);
+            $query = "SELECT * FROM entry_in_list WHERE (entry_in_list.list_id = $list_id AND entry_in_list.movie_id = $movie_id)";
+            $exists_response = @mysqli_query($dbc, $query);
 
             if (mysqli_num_rows($exists_response) > 0) { // row exists
                 echo '<h3>Entry already in list.</h3>';
             } else {
-                $entry_query = "INSERT INTO entry_in_list (list_id, movie_id)
+                $query = "INSERT INTO entry_in_list (list_id, movie_id)
                 VALUES ($list_id, $movie_id)";
-                @mysqli_query($dbc, $entry_query);
+                @mysqli_query($dbc, $query);
                 $entry_id = mysqli_insert_id($dbc); // gets last inserted ID
                 echo '<h3>Entry added to list.</h3>';
             }
-
         }
-    
     }
 
     // creates table
@@ -123,7 +124,7 @@ if ($_SESSION['user_id'] == $list_array['user_id']) {
     WHERE list_id=$list_id";
     $response = @mysqli_query($dbc, $query);
 
-    echo '<table id="data-table" align="left"
+    echo '<table align="left"
     cellspacing="5" cellpadding="8">
     <tr>
     <th>Title</h>
@@ -137,6 +138,8 @@ if ($_SESSION['user_id'] == $list_array['user_id']) {
         </tr>';
     }
     echo '</table>';
+
+    echo '<div> <!-- #content -->';
 
     mysqli_close($dbc);
 

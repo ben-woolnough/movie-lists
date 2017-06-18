@@ -15,6 +15,19 @@ function editComment(obj) {
     var textArea = commentArea.querySelector("textarea");
     textArea.innerHTML = comment;
     // set button value to entry_id
-    var saveButton = commentArea.querySelector("button");
+    var saveButton = commentArea.querySelector(".button");
     saveButton.value = obj.value;
+}
+
+function closeModal() {
+    var commentArea = document.getElementById("comment-area");
+    commentArea.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+var commentArea = document.getElementById("comment-area");
+window.onclick = function(event) {
+    if (event.target == commentArea) {
+        commentArea.style.display = "none";
+    }
 }

@@ -1,16 +1,6 @@
-<?php session_start(); ?>
-
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-  <link rel="stylesheet" type="text/css" href="css/style.css">
-</head>
-
-<body>
-
-
 <?php
+session_start();
+
 if(isset($_POST['submit'])) { // check form was submitted
     if(empty($_POST["username"]) OR empty($_POST["password"])) {
         header("location: index.php?missing_data");
@@ -48,7 +38,3 @@ if(isset($_POST['submit'])) { // check form was submitted
     header("location: index.php");
 }
 ?>
-
-
-</body>
-</html>

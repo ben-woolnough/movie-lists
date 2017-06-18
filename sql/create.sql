@@ -21,6 +21,7 @@ CREATE TABLE list (
 
 CREATE TABLE movie (
   movie_id int unsigned NOT NULL auto_increment,
+  tmdb_id int unsigned NOT NULL,
   title varchar(60) NOT NULL,
   year year NOT NULL,
   type enum('movie', 'series'),

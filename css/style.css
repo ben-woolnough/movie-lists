@@ -1,9 +1,22 @@
 body {
+  font-family: Helvetica;
   margin: 50px 0 0 0;
-  background: #ddd;
+  background: #e5e5e5;
+}
+
+#content {
+  width: 50%;
+  margin: 80px auto;
+}
+
+@media screen and (max-width: 600px) {
+  #content {
+    width: 100%;
+  }
 }
 
 h1, h2, h3, h4, h5, h6 {
+  font-family: 'Yanone Kaffeesatz', sans-serif;
   margin-left: 20px;
   margin-right: 20px;
 }
@@ -71,21 +84,9 @@ header a:hover {
 
 /* TABLE */
 
-@media screen and (max-width: 900px) { /*small*/
-  table {
-    width: 90%;
-    margin: auto;
-  }
-}
-
-@media screen and (min-width: 900px) { /*large*/
-  table {
-    width: 800px;
-  }
-  table td, th {
-    font-size: 16pt;
-    padding: 3px 10px;
-  }
+table {
+  font-size: 16pt;
+  min-width: 80%;
 }
 
 table {
@@ -94,13 +95,19 @@ table {
 }
 
 table td, td p {
-  max-width: 600px;
+  /*max-width: 600px;*/
   overflow-x: auto;
 }
 
 table, th, td {
   border: 1px solid black;
   border-collapse: collapse;
+}
+
+@media screen and (max-width: 1200px) {
+  table, td, th, tr {
+    font-size: 12pt;
+  }
 }
 
 /* LOGIN / REGISTER PAGE */
@@ -114,6 +121,12 @@ table, th, td {
 .login-container .input-field {
   padding: 5px;
   width: 60%;
+}
+
+@media only screen and (max-width: 400px) {
+  .login-container h1 {
+    font-size: 16pt;
+  }
 }
 
 #login, #register {
@@ -162,7 +175,7 @@ table, th, td {
   display: none;
 }
 
-.input {
+input.create-list {
   width: 40%;
   padding: 6px;
   margin-right: 10px;
@@ -176,12 +189,10 @@ table, th, td {
 
 /* BUTTON CLASSES */
 
-.button, .delete-button, .edit-button {
+.button {
   height: 30px;
-  background: #74ba5b;
-  background-image: -webkit-linear-gradient(#15a57f, #15a55d);
-  background-image: linear-gradient(#15a57f, #15a55d);
-  margin: 20px;
+  background: #15a57f;
+  margin: 10px 5px 10px 20px;
   color: white;
   border-radius: 7px;
   border: none;
@@ -209,4 +220,52 @@ table, th, td {
   display: block;
   margin: 0;
   float: right;
+}
+
+
+/* MODAL */
+
+#comment-area {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+#comment-content {
+  border-radius: 10px;
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  max-width: 60%;
+}
+
+#comment-area textarea {
+  width: 100%;
+}
+
+#comment-area button {
+  display: block;
+  margin: 10px auto;
+}
+
+#comment-area .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+#comment-area .close:hover,
+#comment-area .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }

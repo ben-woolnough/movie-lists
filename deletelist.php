@@ -4,7 +4,7 @@
 <html>
 <head>
   <title>Test</title>
-  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <?php require 'templates/imports.html'; ?>
 </head>
 
 <body>
@@ -13,7 +13,7 @@
 
 if($_SESSION['logged_in']==true AND $_SERVER['REQUEST_METHOD']=='POST') {
 
-    include 'header.php';
+    include 'templates/header.php';
 
     require_once('../../mysqli_connect.php');
 
@@ -30,7 +30,7 @@ if($_SESSION['logged_in']==true AND $_SERVER['REQUEST_METHOD']=='POST') {
         mysqli_query($dbc, $delete_query);
 
         echo '<h2 class="notify">List deleted.</h2>';
-        echo '<h3><a href="profile.php">Back</a></h3>';
+        echo '<a href="profile.php"><button class="button">Back</button></a>';
 
     } else {
         echo '<h2 class="notify">Permission denied.</h2>';

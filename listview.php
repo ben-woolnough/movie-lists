@@ -5,7 +5,7 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>List</title>
-  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <?php require 'templates/imports.html'; ?>
 </head>
 
 <body>
@@ -14,7 +14,9 @@
 
 if ($_SESSION['logged_in'] == true) {
 
-    include 'header.php';
+    include 'templates/header.php';
+
+    echo '<div id="content">';
 
     require_once('../../mysqli_connect.php');
     
@@ -38,18 +40,18 @@ if ($_SESSION['logged_in'] == true) {
     if ($_SESSION['user_id'] == $list_array['user_id']) {
 
         echo '<h1> List: ' . $list_name . '</h1>';
-        echo '<h3><a href="editlist.php?list_id=' . $list_id . '">Edit</a></h3>';
-        echo '<h3><a href="add.php?list_id=' . $list_id . '">Add movies</a></h3>';
+        echo '<a href="editlist.php?list_id=' . $list_id . '"><button class="button">Edit</button></a>';
+        echo '<a href="add.php?list_id=' . $list_id . '"><button class="button">Add movies</button></a>';
 
         // creates table
-        $query = "SELECT movie.title, movie.year, movie.type, comment.comment
+        $query = "SELECT movie.tmdb_id, movie.title, movie.year, movie.type, comment.comment
         FROM entry_in_list
         LEFT JOIN comment ON entry_in_list.entry_id = comment.entry_id
         INNER JOIN movie ON entry_in_list.movie_id = movie.movie_id
         WHERE list_id=$list_id";
         $response = @mysqli_query($dbc, $query);
 
-        echo '<table id="data-table" align="left"
+        echo '<table align="left"
         cellspacing="5" cellpadding="8">
         <tr>
         <th>Title</h>
@@ -60,7 +62,7 @@ if ($_SESSION['logged_in'] == true) {
 
         while ($row = mysqli_fetch_array($response)) {
             echo '<tr>
-            <td>' . $row['title'] . '</td>
+            <td><a href="detailsview.php?q=' . $row['tmdb_id'] . '" target="_blank">' . $row['title'] . '</a></td>
             <td>' . $row['year'] . '</td>
             <td>' . $row['type'] . '</td>
             <td><p class="prewrap">' . $row['comment'] . '</p></td>
@@ -74,12 +76,13 @@ if ($_SESSION['logged_in'] == true) {
         echo '<h1>Not found.</h1>';
     }
 
+    echo '</div> <!-- #content --> ';
+
 } else {
     header("location: index.php");
 }
 
 ?>
-
 
 </body>
 </html>

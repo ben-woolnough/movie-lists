@@ -5,7 +5,7 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Movie Lists</title>
-  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <?php require 'templates/imports.html'; ?>
 </head>
 
 <body>
@@ -14,7 +14,9 @@
 
 if($_SESSION['logged_in'] == true) {
 
-    include 'header.php';
+    include 'templates/header.php';
+
+    echo '<div id="content">';
 
     require_once('../../mysqli_connect.php');
 
@@ -25,7 +27,7 @@ if($_SESSION['logged_in'] == true) {
 
         if (strlen($_POST['list_name'])<1 OR preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $_POST['list_name'])) {
 
-            echo '<h3 class="notify">Enter a valid name.</h3>';
+            echo '<h2 class="notify">Enter a valid name.</h2>';
 
         } else {
             $list_name = mysqli_real_escape_string($dbc, $_POST['list_name']);
@@ -35,9 +37,9 @@ if($_SESSION['logged_in'] == true) {
         }
     }
 
-    echo '<h3>Create a new list</h3>
+    echo '<h1>Create a new list</h1>
     <form action="profile.php" method="post">
-      <input class=input type="text" name="list_name" placeholder="Enter a name">
+      <input class="create-list" type="text" name="list_name" placeholder="Enter list name">
       <input class="button" type="submit" name="submit" value="Create">
     </form><br>';
 
@@ -45,7 +47,7 @@ if($_SESSION['logged_in'] == true) {
     $list_query = "SELECT * FROM list WHERE user_id='$user_id'";
     $list_response = @mysqli_query($dbc, $list_query);
 
-    echo '<h3>Your Lists</h3>
+    echo '<h1>Your Lists</h1>
     <table>
       <tr>
         <th>Name</th>
@@ -58,6 +60,8 @@ if($_SESSION['logged_in'] == true) {
     }
     echo '</table>';
 
+    echo '</div> <!-- #content -->';
+
     mysqli_close($dbc);
 
 } else {
@@ -65,7 +69,6 @@ if($_SESSION['logged_in'] == true) {
 }
 
 ?>
-
 
 </body>
 </html>

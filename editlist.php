@@ -5,7 +5,7 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Edit</title>
-  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <?php require 'templates/imports.html'; ?>
 </head>
 
 <body>
@@ -14,7 +14,9 @@
 
 if ($_SESSION['logged_in'] == true) {
 
-    include 'header.php';
+    include 'templates/header.php';
+
+    echo '<div id="content">';
 
     require_once('../../mysqli_connect.php');
 
@@ -83,13 +85,13 @@ if ($_SESSION['logged_in'] == true) {
 
         echo '<h1> Editing: ' . $list_name . '</h1>';
 
-        echo '<h3><a href="listview.php?list_id=' . $list_id . '">Done editing</a></h3>';
+        echo '<a href="listview.php?list_id=' . $list_id . '"><button class="button">Done editing</button></a>';
 
         // delete list form
         echo '<div>
-        <span><form style="display:inline" action="deletelist.php" method="post">
-        <button class=button type="submit" name="list_id" value="' . $list_id . '" style="background: #d22">Delete list</button>
-        </form></span>';
+        <form style="display:inline" action="deletelist.php" method="post">
+        <button class="button" type="submit" name="list_id" value="' . $list_id . '" style="background: #d22">Delete list</button>
+        </form>';
 
         // rename form
         echo '<span><button onclick="renameList()" class="button">Rename list</button></span>
@@ -112,7 +114,7 @@ if ($_SESSION['logged_in'] == true) {
         WHERE list_id=$list_id";
         $response = @mysqli_query($dbc, $query);
 
-        echo '<table id="data-table" align="left"
+        echo '<table align="left"
         cellspacing="5" cellpadding="8">
         <tr>
         <th>Title</h>
@@ -127,10 +129,10 @@ if ($_SESSION['logged_in'] == true) {
             <td>' . $row['title'] . '</td>
             <td>' . $row['year'] . '</td>
             <td>' . $row['type'] . '</td>
-            <td><p class="prewrap">' . $row['comment'] . '</p><button onclick="editComment(this)" class="edit-button" value=' . $row['entry_id'] . '>Edit</button></td>
+            <td><p class="prewrap">' . $row['comment'] . '</p><button onclick="editComment(this)" class="button edit-button" value=' . $row['entry_id'] . '>Edit</button></td>
             <td>
               <form action="editlist.php?list_id=' . $list_id . '" method="post">
-                <button class="delete-button" type="submit" name="id_to_delete" value=' . $row['movie_id'] . '>x</button>
+                <button class="button delete-button" type="submit" name="id_to_delete" value=' . $row['movie_id'] . '>&times</button>
               </form>
             </td>
             </tr>';
@@ -138,16 +140,21 @@ if ($_SESSION['logged_in'] == true) {
         echo '</table>';
 
         // comment form
-        echo '<div id="comment-area" style="display:none">
+        echo '<div id="comment-area">
+        <div id="comment-content">
+        <button onclick="closeModal()" class="close">&times;</button>
         <form action="editlist.php?list_id=' . $list_id . '" method="post">
-        <textarea name="new_comment" rows="30" cols="60"></textarea>
-        <button class="button" type="submit" name="entry_id">Save</button>
+        <textarea name="new_comment" rows="30"></textarea>
+        <button onclick="closeModal" class="button" type="submit" name="entry_id">Save</button>
         </form>
+        </div>
         </div>';
 
     } else { // id not in database or owned by other user
         echo '<h1>Not found.</h1>';
     }
+
+    echo '</div> <!-- #content -->';
 
     mysqli_close($dbc);
 
