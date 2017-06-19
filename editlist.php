@@ -14,11 +14,10 @@
 
 if ($_SESSION['logged_in'] == true) {
 
+    require_once('../../mysqli_connect.php');
     include 'templates/header.php';
 
     echo '<div id="content">';
-
-    require_once('../../mysqli_connect.php');
 
     // validate list_id
     if (isset($_GET['list_id'])) { // check list_id set
@@ -64,49 +63,54 @@ if ($_SESSION['logged_in'] == true) {
 
         // edit comment form
         if (isset($_POST['new_comment'])) {
-            // update if comment exists; insert if not
 
+            // assign comment properties to variables
             $new_comment = htmlspecialchars(mysqli_real_escape_string($dbc, $_POST['new_comment']));
             $comment_entry_id = mysqli_real_escape_string($dbc, $_POST['entry_id']);
+            $comment_movie_id = $_POST['movie_id'];
 
             $query = "SELECT * FROM comment WHERE entry_id=$comment_entry_id";
             $response = @mysqli_query($dbc, $query);
             $comment_array = mysqli_fetch_array($response);
 
             if ($comment_array) {
+                // change existing comment
                 $update_query = "UPDATE comment SET comment='$new_comment' WHERE entry_id=$comment_entry_id";
                 @mysqli_query($dbc, $update_query);
             } else {
-                $insert_query = "INSERT INTO comment (comment, entry_id)
-                VALUES ('$new_comment', $comment_entry_id)";
+                // add new comment to comment table
+                $username = $_SESSION['username'];
+                $insert_query = "INSERT INTO comment (comment, user, movie_id, entry_id)
+                VALUES ('$new_comment', '$username', $comment_movie_id, $comment_entry_id)";
                 @mysqli_query($dbc, $insert_query);
             }
         }
 
-        echo '<h1> Editing: ' . $list_name . '</h1>';
 
-        echo '<a href="listview.php?list_id=' . $list_id . '"><button class="button">Done editing</button></a>';
+        /* HTML */
 
-        // delete list form
+        echo '<h1> Editing: ' . $list_name . '</h1>
+        <a href="listview.php?list_id=' . $list_id . '"><button class="button">Done editing</button></a>';
+
+        // form for deleting list
         echo '<div>
         <form style="display:inline" action="deletelist.php" method="post">
         <button class="button" type="submit" name="list_id" value="' . $list_id . '" style="background: #d22">Delete list</button>
         </form>';
 
-        // rename form
+        // form for renaming list
         echo '<span><button onclick="renameList()" class="button">Rename list</button></span>
         
-        
         <form action="editlist.php?list_id=' . $list_id . '" method="post" style="display:inline">
-        <input class="rename" style="display:none" type="text" name="newname" placeholder="Enter a name">
-        <button class="button rename" style="display:none" type="submit" name="list_id" value="submit">OK</button>
+          <input class="rename" style="display:none" type="text" name="newname" placeholder="Enter a name">
+          <button class="button rename" style="display:none" type="submit" name="list_id" value="submit">OK</button>
         </form>
         </div>';
 
 
         /* TABLE */
 
-        // joins entries and movies to get titles
+        // get table rows
         $query = "SELECT entry_in_list.entry_id, movie.movie_id, movie.title, movie.year, comment.comment, comment.comment_id
         FROM entry_in_list
         LEFT JOIN comment ON entry_in_list.entry_id = comment.entry_id
@@ -114,18 +118,22 @@ if ($_SESSION['logged_in'] == true) {
         WHERE list_id=$list_id";
         $response = @mysqli_query($dbc, $query);
 
+        // Table Header
         echo '<table align="left"
         cellspacing="5" cellpadding="8">
         <tr>
-        <th>Title</h>
-        <th>Comment</th>
-        <th>Delete</th>
+          <th>Title</h>
+          <th>Comment</th>
+          <th>Delete</th>
         </tr>';
-
+        // Table Rows
         while ($row = mysqli_fetch_array($response)) {
             echo '<tr>
             <td>' . $row['title'] .' ('.$row['year']. ')</td>
-            <td><p class="prewrap">' . $row['comment'] . '</p><button onclick="editComment(this)" class="button edit-button" value=' . $row['entry_id'] . '>Edit</button></td>
+            <td>
+              <p class="prewrap">' . $row['comment'] . '</p>
+              <button onclick="editComment(this)" class="button edit-button" data-movieid=' . $row['movie_id'] . ' value=' . $row['entry_id'] . '>Edit</button>
+            </td>
             <td>
               <form action="editlist.php?list_id=' . $list_id . '" method="post">
                 <button class="button delete-button" type="submit" name="id_to_delete" value=' . $row['movie_id'] . '>&times</button>
@@ -135,18 +143,19 @@ if ($_SESSION['logged_in'] == true) {
         }
         echo '</table>';
 
-        // comment form
+        // form for submitting comment
         echo '<div id="comment-area">
         <div id="comment-content">
-        <button onclick="closeModal()" class="close">&times;</button>
-        <form action="editlist.php?list_id=' . $list_id . '" method="post">
-        <textarea name="new_comment" rows="30"></textarea>
-        <button onclick="closeModal" class="button" type="submit" name="entry_id">Save</button>
-        </form>
+          <button onclick="closeModal()" class="close">&times;</button>
+          <form action="editlist.php?list_id=' . $list_id . '" method="post">
+            <textarea name="new_comment" rows="30"></textarea>
+            <input id="movie_id" type="hidden" value="" name="movie_id">
+            <button onclick="closeModal" class="button" type="submit" name="entry_id">Save</button>
+          </form>
         </div>
         </div>';
 
-    } else { // id not in database or owned by other user
+    } else { // list does not belong to user or not in database
         echo '<h1>Not found.</h1>';
     }
 

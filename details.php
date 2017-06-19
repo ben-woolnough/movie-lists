@@ -32,10 +32,10 @@ function getMovieInfo($tmdb_id) {
 }
 
 if (isset($_GET['q'])) {
-    $query = $_GET['q'];
-    if (is_numeric($query)) {
+    $tmdb_id = $_GET['q'];
+    if (is_numeric($tmdb_id)) {
 
-        $res = getMovieInfo($query);
+        $res = getMovieInfo($tmdb_id);
 
         $fields = ['title', 'release_date', 'runtime', 'genres',
         'overview', 'poster_path', 'imdb_id'];

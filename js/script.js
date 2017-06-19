@@ -17,6 +17,8 @@ function editComment(obj) {
     // set button value to entry_id
     var saveButton = commentArea.querySelector(".button");
     saveButton.value = obj.value;
+    // set hidden input's value equal to movie_id
+    document.getElementById("movie_id").value = obj.getAttribute("data-movieid");
 }
 
 function closeModal() {

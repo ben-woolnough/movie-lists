@@ -1,5 +1,4 @@
 <?php require 'details.php'; ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,6 +36,32 @@
 
 </div> <!-- .well -->
 
+
+<?php
+// COMMENTS
+require_once('../../mysqli_connect.php');
+
+$query = "SELECT user, comment, timestamp
+FROM comment
+JOIN movie ON comment.movie_id = movie.movie_id
+WHERE tmdb_id=$tmdb_id
+ORDER BY timestamp DESC";
+
+$response = mysqli_query($dbc, $query);
+
+echo '<div class="well">
+<h2 class="text-center">Comments</h2>
+<div class="row">';
+while ($row = mysqli_fetch_array($response)) {
+    echo '<div class="col-sm-6 col-sm-offset-3 col-md-offset-2">
+    <h3>'.$row['user'].' <small>'.$row['timestamp'].'</small></h3>
+    <p>'.$row['comment'].'</p>
+    </div>';
+}
+echo '</div></div>';
+
+mysqli_close($dbc);
+?>
 
 
 </div> <!-- .container -->

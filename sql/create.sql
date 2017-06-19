@@ -42,7 +42,10 @@ CREATE TABLE entry_in_list (
 CREATE TABLE comment (
   comment_id int unsigned NOT NULL auto_increment,
   comment text NOT NULL,
+  user varchar(30) NOT NULL,
+  movie_id int unsigned NOT NULL,
   entry_id int unsigned,
+  timestamp timestamp CURRENT_TIMESTAMP,
   PRIMARY KEY (comment_id),
   FOREIGN KEY (entry_id) REFERENCES entry_in_list(entry_id)
     ON DELETE CASCADE
