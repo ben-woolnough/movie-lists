@@ -9,12 +9,6 @@ body {
   margin: 80px auto;
 }
 
-@media screen and (max-width: 600px) {
-  #content {
-    width: 100%;
-  }
-}
-
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Yanone Kaffeesatz', sans-serif;
   margin-left: 20px;
@@ -87,27 +81,18 @@ header a:hover {
 table {
   font-size: 16pt;
   min-width: 80%;
-}
-
-table {
   margin: 20px;
   background: white;
 }
 
-table td, td p {
-  /*max-width: 600px;*/
+table td {
   overflow-x: auto;
+  padding: 10px;
 }
 
 table, th, td {
   border: 1px solid black;
   border-collapse: collapse;
-}
-
-@media screen and (max-width: 1200px) {
-  table, td, th, tr {
-    font-size: 12pt;
-  }
 }
 
 /* LOGIN / REGISTER PAGE */
@@ -268,4 +253,16 @@ input.create-list {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+@media screen and (max-width: 900px) {
+  #content {
+    width: 100%;
+  }
+  table, td, th, tr {
+    font-size: 12pt;
+  }
+  table td {
+    padding: 5px;
+  }
 }

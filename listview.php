@@ -44,7 +44,7 @@ if ($_SESSION['logged_in'] == true) {
         echo '<a href="add.php?list_id=' . $list_id . '"><button class="button">Add movies</button></a>';
 
         // creates table
-        $query = "SELECT movie.tmdb_id, movie.title, movie.year, movie.type, comment.comment
+        $query = "SELECT movie.tmdb_id, movie.title, movie.year, comment.comment
         FROM entry_in_list
         LEFT JOIN comment ON entry_in_list.entry_id = comment.entry_id
         INNER JOIN movie ON entry_in_list.movie_id = movie.movie_id
@@ -55,16 +55,12 @@ if ($_SESSION['logged_in'] == true) {
         cellspacing="5" cellpadding="8">
         <tr>
         <th>Title</h>
-        <th>Year</th>
-        <th>Type</th>
         <th>Comment</th>
         </tr>';
 
         while ($row = mysqli_fetch_array($response)) {
             echo '<tr>
-            <td><a href="detailsview.php?q=' . $row['tmdb_id'] . '" target="_blank">' . $row['title'] . '</a></td>
-            <td>' . $row['year'] . '</td>
-            <td>' . $row['type'] . '</td>
+            <td><a href="detailsview.php?q=' . $row['tmdb_id'] . '" target="_blank">' . $row['title'] .' ('.$row['year']. ')' . '</a></td>
             <td><p class="prewrap">' . $row['comment'] . '</p></td>
             </tr>';
         }

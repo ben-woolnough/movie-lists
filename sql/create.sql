@@ -24,7 +24,6 @@ CREATE TABLE movie (
   tmdb_id int unsigned NOT NULL,
   title varchar(60) NOT NULL,
   year year NOT NULL,
-  type enum('movie', 'series'),
   PRIMARY KEY (movie_id)
 ) ENGINE=InnoDB;
 
@@ -32,6 +31,7 @@ CREATE TABLE entry_in_list (
   entry_id int unsigned NOT NULL auto_increment,
   list_id int unsigned,
   movie_id int unsigned,
+  timestamp timestamp CURRENT_TIMESTAMP,
   PRIMARY KEY (entry_id),
   FOREIGN KEY (list_id) REFERENCES list(list_id)
     ON DELETE CASCADE,

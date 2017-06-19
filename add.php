@@ -33,8 +33,8 @@ if (isset($_GET['list_id'])) { // check list_id set
 }
     
 // gets list name
-$name_query = "SELECT * FROM list WHERE list_id=$list_id";
-$name_response = @mysqli_query($dbc, $name_query);
+$query = "SELECT * FROM list WHERE list_id=$list_id";
+$name_response = @mysqli_query($dbc, $query);
 $list_array = mysqli_fetch_array($name_response);
 $list_name = $list_array['list_name'];
 
@@ -83,7 +83,6 @@ if ($_SESSION['user_id'] == $list_array['user_id']) {
             $movie = $json['results'][0];
 
             $title = $movie['title'];
-            $type = 'movie';
             $year = substr($movie['release_date'], 0, 4);
             $tmdb_id = $movie['id'];
             //$poster_path = $movie['poster_path'];
@@ -96,8 +95,8 @@ if ($_SESSION['user_id'] == $list_array['user_id']) {
             if (mysqli_num_rows($check_response) > 0) { // row exists
                 $movie_id = mysqli_fetch_array($check_response)['movie_id'];
             } else { // movie not in table
-                @mysqli_query($dbc, "INSERT INTO movie (tmdb_id, title, year, type)
-                VALUES ('$tmdb_id', '$title', '$year', '$type')");
+                @mysqli_query($dbc, "INSERT INTO movie (tmdb_id, title, year)
+                VALUES ('$tmdb_id', '$title', '$year')");
                 $movie_id = mysqli_insert_id($dbc); // gets last inserted ID
             }
 
@@ -118,10 +117,11 @@ if ($_SESSION['user_id'] == $list_array['user_id']) {
     }
 
     // creates table
-    $query = "SELECT movie.title, movie.year
+    $query = "SELECT movie.title, movie.year, entry_in_list.timestamp
     FROM entry_in_list
     INNER JOIN movie ON entry_in_list.movie_id = movie.movie_id
-    WHERE list_id=$list_id";
+    WHERE list_id=$list_id
+    ORDER BY timestamp DESC";
     $response = @mysqli_query($dbc, $query);
 
     echo '<table align="left"

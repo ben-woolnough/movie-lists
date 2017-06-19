@@ -107,7 +107,7 @@ if ($_SESSION['logged_in'] == true) {
         /* TABLE */
 
         // joins entries and movies to get titles
-        $query = "SELECT entry_in_list.entry_id, movie.movie_id, movie.title, movie.year, movie.type, comment.comment, comment.comment_id
+        $query = "SELECT entry_in_list.entry_id, movie.movie_id, movie.title, movie.year, comment.comment, comment.comment_id
         FROM entry_in_list
         LEFT JOIN comment ON entry_in_list.entry_id = comment.entry_id
         INNER JOIN movie ON entry_in_list.movie_id = movie.movie_id
@@ -118,17 +118,13 @@ if ($_SESSION['logged_in'] == true) {
         cellspacing="5" cellpadding="8">
         <tr>
         <th>Title</h>
-        <th>Year</th>
-        <th>Type</th>
         <th>Comment</th>
         <th>Delete</th>
         </tr>';
 
         while ($row = mysqli_fetch_array($response)) {
             echo '<tr>
-            <td>' . $row['title'] . '</td>
-            <td>' . $row['year'] . '</td>
-            <td>' . $row['type'] . '</td>
+            <td>' . $row['title'] .' ('.$row['year']. ')</td>
             <td><p class="prewrap">' . $row['comment'] . '</p><button onclick="editComment(this)" class="button edit-button" value=' . $row['entry_id'] . '>Edit</button></td>
             <td>
               <form action="editlist.php?list_id=' . $list_id . '" method="post">
