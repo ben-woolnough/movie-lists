@@ -4,7 +4,8 @@ if (isset($_POST['submit'])) {
 
     if (empty($_POST["username"]) OR empty($_POST["password"])) {
 
-        header("location: index.php?missing_data");
+        header("Location: index.php?missing_data");
+        exit();
 
     } else {
 
@@ -16,7 +17,8 @@ if (isset($_POST['submit'])) {
         // check that username does not contain special chars
         if (preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $username) OR strlen($username)>30 OR strlen($password)>30) {
 
-            header("location: index.php?invalid");
+            header("Location: index.php?invalid");
+            exit();
 
         } else {
 
@@ -24,9 +26,11 @@ if (isset($_POST['submit'])) {
             mysqli_query($dbc, $query);
 
             if (mysqli_affected_rows($dbc) == 1) {
-                header("location: index.php?registered=true");
+                header("Location: index.php?registered=true");
+                exit();
             } else {
-                header("location: index.php?registered=false");
+                header("Location: index.php?registered=false");
+                exit();
             }
             
         }
@@ -35,7 +39,8 @@ if (isset($_POST['submit'])) {
     }
 
 } else {
-    header("location: index.php");
+    header("Location: index.php");
+    exit();
 }
 
 ?>

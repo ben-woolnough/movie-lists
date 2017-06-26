@@ -66,6 +66,7 @@ if($_SESSION['logged_in'] == true) {
 
 } else {
     header("location: index.php");
+    exit();
 }
 
 ?>

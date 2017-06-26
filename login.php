@@ -3,7 +3,8 @@ session_start();
 
 if(isset($_POST['submit'])) { // check form was submitted
     if(empty($_POST["username"]) OR empty($_POST["password"])) {
-        header("location: index.php?missing_data");
+        header("Location: index.php?missing_data");
+        exit();
     } else {
         require_once('../../mysqli_connect.php');
         
@@ -20,21 +21,25 @@ if(isset($_POST['submit'])) { // check form was submitted
                 $_SESSION['username'] = $username;
                 $_SESSION['user_id'] = $user_array['user_id'];
                 $_SESSION['logged_in'] = true;
-                header("location: profile.php");
+                header("Location: profile.php");
+                exit();
                 
             } else {
                 // wrong password
-                header("location: index.php?login_failed");
+                header("Location: index.php?login_failed");
+                exit();
             }
         } else {
             // wrong username
-            header("location: index.php?login_failed");
+            header("Location: index.php?login_failed");
+            exit();
         }
 
         mysqli_close($dbc);
 
     }
 } else { // no submit
-    header("location: index.php");
+    header("Location: index.php");
+    exit();
 }
 ?>

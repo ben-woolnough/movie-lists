@@ -24,10 +24,12 @@ if ($_SESSION['logged_in'] == true) {
     if (isset($_GET['list_id'])) { // check list_id set
         $list_id = $_GET['list_id'];
         if (!is_numeric($list_id)) { // if list_id not a number, redirect
-            header("location: profile.php");
+            header("Location: profile.php");
+            exit();
         }
     } else {
-        header("location: profile.php");
+        header("Location: profile.php");
+        exit();
     }
         
     // gets list name
@@ -75,7 +77,8 @@ if ($_SESSION['logged_in'] == true) {
     echo '</div> <!-- #content --> ';
 
 } else {
-    header("location: index.php");
+    header("Location: index.php");
+    exit();
 }
 
 ?>

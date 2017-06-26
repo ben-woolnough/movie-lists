@@ -4,11 +4,6 @@ body {
   background: #e5e5e5;
 }
 
-#content {
-  width: 50%;
-  margin: 80px auto;
-}
-
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Yanone Kaffeesatz', sans-serif;
   margin-left: 20px;
@@ -31,6 +26,17 @@ input {
   font-family: helvetica;
   text-align: center;
 }
+
+.prewrap {
+  white-space: pre-wrap;
+}
+
+input.create-list {
+  width: 40%;
+  padding: 6px;
+  margin-right: 10px;
+}
+
 
 /* HEADER */
 
@@ -76,7 +82,13 @@ header a:hover {
   color: #cfc;
 }
 
-/* TABLE */
+
+/* LAYOUT & TABLES */
+
+#content {
+  width: 50%;
+  margin: 80px auto;
+}
 
 table {
   font-size: 16pt;
@@ -94,6 +106,19 @@ table, th, td {
   border: 1px solid black;
   border-collapse: collapse;
 }
+
+@media screen and (max-width: 900px) {
+  #content {
+    width: 100%;
+  }
+  table, td, th, tr {
+    font-size: 12pt;
+  }
+  table td {
+    padding: 5px;
+  }
+}
+
 
 /* LOGIN / REGISTER PAGE */
 
@@ -124,55 +149,7 @@ table, th, td {
 }
 
 
-/* SEARCH BOX */
-
-#box {
-  margin: 20px;
-  background: #eec;
-  border: solid #888 2px;
-  width: 500px;
-  padding: 10px;
-  display: none;
-}
-
-#box-left {
-  float: left;
-  width: 200px;
-  height: 300px;
-}
-
-#box-right {
-  margin-left: 200px;
-  height: 300px;
-}
-
-#add-button {
-  position: relative;
-  left: 60px;
-  width: 60px;
-}
-
-#box img {
-  margin: 0 10px;
-}
-
-#hidden-form p {
-  display: none;
-}
-
-input.create-list {
-  width: 40%;
-  padding: 6px;
-  margin-right: 10px;
-}
-
-/* TEXT WRAPPING */
-
-.prewrap {
-  white-space: pre-wrap;
-}
-
-/* BUTTON CLASSES */
+/* BUTTONS */
 
 .button {
   height: 30px;
@@ -255,14 +232,35 @@ input.create-list {
     cursor: pointer;
 }
 
-@media screen and (max-width: 900px) {
-  #content {
-    width: 100%;
-  }
-  table, td, th, tr {
-    font-size: 12pt;
-  }
-  table td {
-    padding: 5px;
-  }
+
+/* SEARCH RESULTS */
+
+ul#search-list {
+  list-style: none;
+  position: absolute;
+  z-index: 1;
+  margin-top: 0;
+  padding-left: 20px;
+  min-width: 35%;
+}
+
+ul#search-list li {
+  border: 1px solid black;
+  margin: 0;
+  padding: 10px;
+  color: black;
+  background: #d2ffcd;
+}
+
+ul#search-list li:hover {
+  background: #9cd196;
+}
+
+#search-form input {
+  height: 30px;
+  margin: 0 0 0 20px;
+}
+
+#search-form input[type='text'] {
+  width: 70%;
 }

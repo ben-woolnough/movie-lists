@@ -2,6 +2,7 @@
 
 session_unset();
 session_destroy();
-header("location: index.php?logout");
+header("Location: index.php?logout");
+exit();
 
 ?>

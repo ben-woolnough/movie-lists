@@ -21,7 +21,8 @@
 // if user is logged in, redirects to profile.php
 if (isset($_SESSION['logged_in'])) {
     if ($_SESSION['logged_in'] == true) {
-        header("location: profile.php");
+        header("Location: profile.php");
+        exit();
     }
 }
 // Account registration message

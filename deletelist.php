@@ -39,7 +39,8 @@ if($_SESSION['logged_in']==true AND $_SERVER['REQUEST_METHOD']=='POST') {
     mysqli_close($dbc);
 
 } else {
-    header("location: index.php");
+    header("Location: index.php");
+    exit();
 }
 
 ?>
